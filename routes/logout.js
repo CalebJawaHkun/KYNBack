@@ -1,0 +1,32 @@
+const { response } = require('./signcommon')
+
+module.exports = exp => {
+    const router = exp.Router()
+
+
+    router.post('/logout', async (req, res) => {
+        try {
+            const authType = req.session?.authType || 'local'
+
+            if(authType === 'google') 
+                console.log('Loggin Out Of google user...(comming soon).')
+            
+            req.session.destroy(err => {
+                if(err) {
+                    console.error('Error Destroying the session: ', err)
+                    return res.status(500).json(response(false, 'Logout failed!'))
+                }
+
+                res.clearCookie('connect.sid')
+                return res.json(response(true, 'Logged out successfully.'))
+
+            })
+
+        } catch (err) {
+            console.error('Logout Error: ', err)
+            res.status(500).json(response(false, 'Server error during logout.'))
+        }
+    })
+
+    return router
+}
