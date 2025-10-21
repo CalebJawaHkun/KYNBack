@@ -3,6 +3,10 @@ var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 const dotenv = require('dotenv')
+const cors = require('cors')
+const session = require('express-session')
+const redisClient = require('./Settings/DB_API')
+const {RedisStore} = require('connect-redis')
 
 
 // Settings
@@ -20,15 +24,35 @@ const logout = require('./routes/logout')
 dotenv.config()
 var app = exp();
 
-app.use(SesRedis(exp))
+app.use(cors({
+    origin: 'http://localhost:3000',
+    credentials: true,
+}))
+
+const redisStore = new RedisStore({client: redisClient})
+app.use(
+    session({
+        store: redisStore,
+        secret: process.env.SESSION_SECRET || 'supersecret',
+        resave: false,
+        saveUninitialized: false,
+        cookie: {
+            httpOnly: true,
+            secure: false,
+            maxAge: 1000 * 60 * 60 * 24,
+        }
+    })
+)
 app.use(logger('dev'));
 app.use(exp.json());
 app.use(exp.urlencoded({ extended: false }));
 app.use(cookieParser());
 
 
+
 //routes
 app.use([
+    indexRouter,
     signup(exp), 
     signin(exp),
     logout(exp)

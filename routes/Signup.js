@@ -12,13 +12,14 @@
 const bcrypt = require('bcrypt')
 const redisClient = require('../Settings/DB_API')
 const { v4: uuidv4 } = require('uuid')
-const {response, exists, logSes} = require('./signcommon')
+const {response, exists, logSes, logBody, setSession, localDat} = require('./signcommon')
 
 module.exports = exp => {
     const router = exp()
 
     router.post('/signup', async (req, res) => {
-
+        
+        logBody(req)
         // console.log(req.session && 'Session exists.')
         const { email, password, username } = req.body
 
@@ -39,13 +40,12 @@ module.exports = exp => {
             const hashedPw = await bcrypt.hash(password, 10)
             const userId = uuidv4()
 
-            // 
+            // save to redis
             await redisClient.hSet(`user:${email}`, {
-                userId, email, username, password: hashedPw
+                userId, username, email, password: hashedPw
             })
+            setSession(req, userId, username, email, '', 'local')
 
-            req.session.userId = userId
-            req.session.authType = 'local'
             res.status(201).json(response(true, 'Signup Successful'))
             
             logSes(req)

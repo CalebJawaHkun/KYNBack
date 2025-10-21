@@ -1,7 +1,7 @@
 Title: Initial Local Auth
-Date: 10.17, 6:44PM
+Date: 10.21, 11:23AM
 Author: Caleb Jawa Hkun
-Version: 1.0.0
+Version: 1.0.1
 Note: A simple Oauth/Local Auth project. Built with Express + Redis. Session and Credential storage both are handled by Redis. In this initial version, 4 endpoints are mounted mainly for Local signup/signin. Read the full doc below for detail on Endpoints.
 
 1️⃣ POST /auth/signup
@@ -84,8 +84,8 @@ Otherwise → not logged in.
 📤 Responses
 | Status | Condition     | Example Response                                              |
 | ------ | ------------- | ------------------------------------------------------------- |
-| `200`  | Logged in     | `{ "loggedIn": true, "userId": "<id>", "authType": "local" }` |
-| `200`  | Not logged in | `{ "loggedIn": false }`                                       |
+| `200`  | Logged in     | `{ "loggedIn": true, "clientData": { "userId", "username", "email", "picture", "authType" } }` |
+| `200`  | Not logged in | `{ "loggedIn": false, "clientData": null }`                                       |
 
 4️⃣ POST /auth/logout
 

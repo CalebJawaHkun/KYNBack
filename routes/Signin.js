@@ -1,11 +1,12 @@
 const bcrypt = require('bcrypt')
 const redisClient = require('../Settings/DB_API')
-const {response, exists, logSes} = require('./signcommon')
+const {response, exists, logSes, logBody, setSession, localDat} = require('./signcommon')
 
 module.exports = exp => {
     const router = exp.Router()
 
     router.post('/signin', async (req, res) => {
+        logBody(req)
         const { email, password } = req.body
 
         if(!email || !password) 
@@ -25,8 +26,8 @@ module.exports = exp => {
 
             // console.log(`User with id: ${user.userId} tried to log in.`)
             
-            req.session.userId = user.userId
-            req.session.authType = 'local'
+            setSession(req, user.userId, user.username, email, '', 'local')
+            
             res.status(200).json(response(true, 'Signin Successful!'))
 
             logSes(req)

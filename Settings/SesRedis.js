@@ -21,16 +21,6 @@ module.exports = exp => {
         })
     )
 
-    router.get('/', (req, res) => {
-        if(req.session.views) {
-            req.session.views++
-            res.send(`Welcome back! you have visisted: ${req.session.views} times.`)
-        } else {
-            req.session.views = 1;
-            res.send('Hello new visitor')
-        }
-    })
-
     console.log(`Session and DB has been mounted.`)
 
     return router
