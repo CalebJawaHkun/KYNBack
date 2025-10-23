@@ -6,10 +6,11 @@ module.exports = exp => {
 
     router.post('/logout', async (req, res) => {
         try {
+            /*
             const authType = req.session?.authType || 'local'
 
             if(authType === 'google') 
-                console.log('Loggin Out Of google user...(comming soon).')
+                console.log('Loggin Out Of google user...(comming soon).') */
             
             req.session.destroy(err => {
                 if(err) {

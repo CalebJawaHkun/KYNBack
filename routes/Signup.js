@@ -29,8 +29,10 @@ module.exports = exp => {
 
         try {
             // check if user exists
-
-            const e = await exists(redisClient, email)
+            const key = `user:local:${email}`
+            // console.log(`Incoming Sign Up Email Key: ${key}`)
+            const e = await exists(redisClient, key)
+            // console.log(`Email Already Exists: ${e ? 'true':'false'}.`)
             if(e) {
                 return res.status(409)
                 .json(response(false, 'Email already Registered!'))
@@ -41,7 +43,7 @@ module.exports = exp => {
             const userId = uuidv4()
 
             // save to redis
-            await redisClient.hSet(`user:${email}`, {
+            await redisClient.hSet(`user:local:${email}`, {
                 userId, username, email, password: hashedPw
             })
             setSession(req, userId, username, email, '', 'local')

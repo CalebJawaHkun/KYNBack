@@ -13,12 +13,12 @@ module.exports = exp => {
             return res.status(400).json(response(false, 'Missing required Fields'))
 
         try {
-
-            const e = await exists(redisClient, email)
+            const key = `user:local:${email}`
+            const e = await exists(redisClient, key)
             if(!e) 
                 return res.status(404).json(response(false, 'Email not found. Please signup first.'))
             
-            const user = await redisClient.hGetAll(`user:${email}`)
+            const user = await redisClient.hGetAll(`user:local:${email}`)
             const passwordMatch = await bcrypt.compare(password, user.password)
 
             if(!passwordMatch) 

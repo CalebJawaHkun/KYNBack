@@ -20,6 +20,7 @@ const signup = require('./routes/Signup')
 const signin = require('./routes/Signin')
 const utils = require('./routes/utils')
 const logout = require('./routes/logout')
+const OAuth = require('./routes/OAuth')
 
 dotenv.config()
 var app = exp();
@@ -55,7 +56,8 @@ app.use([
     indexRouter,
     signup(exp), 
     signin(exp),
-    logout(exp)
+    logout(exp),
+    OAuth(exp)
 ])
 app.use(utils(exp))
 
