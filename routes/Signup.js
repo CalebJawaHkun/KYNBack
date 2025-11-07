@@ -12,7 +12,9 @@
 const bcrypt = require('bcrypt')
 const redisClient = require('../Settings/DB_API')
 const { v4: uuidv4 } = require('uuid')
-const {response, exists, logSes, logBody, setSession, localDat} = require('./signcommon')
+const {response, exists, logSes, logBody, setSession, localDat,
+    checkPasswordBoundary, checkUsernameBoundary
+} = require('./signcommon')
 
 module.exports = exp => {
     const router = exp()
@@ -21,11 +23,16 @@ module.exports = exp => {
         
         logBody(req)
         // console.log(req.session && 'Session exists.')
+        console.log('Original Url: ', req.query.redirect)
         const { email, password, username } = req.body
 
         if(!email || !password || !username ) {
             return res.status(400).json(response(false, 'Missing Required Fields'))
         }
+
+        const boundresult = (checkPasswordBoundary(password, res) || checkUsernameBoundary(username, res))
+        if(boundresult)
+            return res.status(401).json(response(false, boundresult))
 
         try {
             // check if user exists

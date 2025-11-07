@@ -1,6 +1,8 @@
 const bcrypt = require('bcrypt')
 const redisClient = require('../Settings/DB_API')
-const {response, exists, logSes, logBody, setSession, localDat} = require('./signcommon')
+const {response, exists, logSes, logBody, setSession, localDat,
+    checkPasswordBoundary
+} = require('./signcommon')
 
 module.exports = exp => {
     const router = exp.Router()
@@ -11,6 +13,10 @@ module.exports = exp => {
 
         if(!email || !password) 
             return res.status(400).json(response(false, 'Missing required Fields'))
+
+        const boundresult = checkPasswordBoundary(password, res)
+        if(boundresult)
+            return res.status(401).json(response(false, boundresult))
 
         try {
             const key = `user:local:${email}`

@@ -1,5 +1,11 @@
+function checkBoundary(arg) {
+    return arg<8 ? 1:arg>=20 ? 2 : 0
+}
+
+function response(success, message) { return ({success, message})}
+
 module.exports = {
-    response: (success, message) => ({success, message}),
+    response: response,
     exists: async (client, key) => client.exists(key),
     logSes: (req) => {
         const ses = req.session?.clientData
@@ -10,4 +16,21 @@ module.exports = {
     setSession: (req, userId, username, email, picture, authType) => {
         req.session.clientData = { userId, username, email, picture, authType }
     },
+    checkUsernameBoundary: (username, res) => {
+
+        const responses = ['Username is less than 8 characters.', 'Username is greater than 19 characters.']
+        const arglength = username.length
+        const result = checkBoundary(arglength)
+        if(result)
+            return responses[result - 1]
+
+    },
+    checkPasswordBoundary: (password, res) => {
+        const responses = ['Password is less than 8 characters.', 'Password is greater than 19 characters.']
+        const arglength = password.length
+        const result = checkBoundary(arglength)
+
+        if(result) 
+            return responses[result - 1]
+    }
 }

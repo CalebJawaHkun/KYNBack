@@ -60,7 +60,7 @@ module.exports = exp => {
             const { email, name, picture } = userInfoRes.data
 
             // prepare Redis querying
-            const localKey = `user:lcoal:${email}`
+            const localKey = `user:local:${email}`
             const googleKey = `user:google:${email}`
 
             // checkinng if the account already exits before
@@ -84,7 +84,16 @@ module.exports = exp => {
                 })
             }
 
-            // set the session
+            const token = {
+                accessToken: access_token.slice(0, 40).concat('...'),
+                tokenType: 'Bearer Token'
+            }
+            const oauthDat = {
+                message: token ? 'Client is authenticated via OAuth':'Cient is authenticated locally. No Token found!',
+                token
+            }
+            
+            req.session.oauthDat = oauthDat
             setSession(req, userId, name, email, picture, 'google')
             logSes(req)
 
