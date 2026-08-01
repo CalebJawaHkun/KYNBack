@@ -53,9 +53,10 @@ module.exports = exp => {
             await redisClient.hSet(`user:local:${email}`, {
                 userId, username, email, password: hashedPw
             })
-            setSession(req, userId, username, email, '', 'local')
+            await setSession(req, userId, username, email, '', 'local')
+            const clientData = req.session.clientData
 
-            res.status(201).json(response(true, 'Signup Successful'))
+            res.status(201).json(response(true, 'Signup Successful', clientData))
             
             logSes(req)
         } catch (err) {

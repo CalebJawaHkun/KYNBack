@@ -2,7 +2,7 @@ function checkBoundary(arg) {
     return arg<8 ? 1:arg>=20 ? 2 : 0
 }
 
-function response(success, message) { return ({success, message})}
+function response(success, message, payload=null) { return ({success, message, payload})}
 
 module.exports = {
     response: response,
@@ -19,6 +19,17 @@ module.exports = {
     logBody: req => console.log(Object.entries(req.body).length>0 ? `Req Body: ${JSON.stringify(req.body)}`:'No Req Body to log.'),
     setSession: (req, userId, username, email, picture, authType) => {
         req.session.clientData = { userId, username, email, picture, authType }
+
+        return new Promise((resolve, reject) => {
+            if (typeof req.session.save === 'function') {
+                req.session.save(err => {
+                    if (err) return reject(err)
+                    resolve(req.session)
+                })
+            } else {
+                resolve(req.session)
+            }
+        })
     },
     checkUsernameBoundary: (username, res) => {
 

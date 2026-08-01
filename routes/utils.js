@@ -4,7 +4,7 @@ module.exports = exp => {
     // sends the login status + userData if the client is authenticated.
     router.get('/status', (req, res) => {
 
-        const defautRes = () => res.status(200).json({loggedIn: false, clientData: null})
+        const defautRes = () => res.status(204).json({loggedIn: false, clientData: null})
 
         const clientData = req.session.clientData
         if(!clientData) return defautRes()
@@ -13,11 +13,12 @@ module.exports = exp => {
         if(!email || !authType || !userId) 
             return defautRes()
 
-        const authDat = req.session.clientData
+        // const authDat = req.session.clientData
         // console.log(`/status: Auth Dat: ${JSON.stringify(authDat)}.`)
         
 
-        console.log(`Client requested Status. User Id: ${userId}.`)
+        // console.log(`Client requested Status. User Id: ${userId}.`)
+        // console.log('Client Status Data: ', clientData)
         res.status(200).json({loggedIn: true, clientData})
         
     })

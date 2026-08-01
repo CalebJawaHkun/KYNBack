@@ -32,9 +32,12 @@ module.exports = exp => {
 
             // console.log(`User with id: ${user.userId} tried to log in.`)
             
-            setSession(req, user.userId, user.username, email, '', 'local')
-            
-            res.status(200).json(response(true, 'Signin Successful!'))
+            await setSession(req, user.userId, user.username, email, '', 'local')
+
+            // console.log('Log In Session Constructed: ', req.session.clientData)
+            const clientData = req.session.clientData
+
+            res.status(200).json(response(true, 'Log in Successful', clientData))
 
             logSes(req)
         } catch (err) {

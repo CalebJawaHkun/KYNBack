@@ -94,7 +94,7 @@ module.exports = exp => {
             }
             
             req.session.oauthDat = oauthDat
-            setSession(req, userId, name, email, picture, 'google')
+            await setSession(req, userId, name, email, picture, 'google')
             logSes(req)
 
             return back()
