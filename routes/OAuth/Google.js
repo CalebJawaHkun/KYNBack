@@ -1,7 +1,7 @@
 const axios = require('axios')
 const { v4: uuid4 } = require('uuid')
-const {redisClient} = require('../Settings/DB_API')
-const { exists, setSession, logSes } = require('./signcommon.js')
+const {redisClient} = require('../../Settings/DB_API.js')
+const { exists, setSession, logSes } = require('../signcommon.js')
 
 module.exports = exp => {
     const router = exp.Router()

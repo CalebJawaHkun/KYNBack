@@ -23,7 +23,9 @@ const signup = require('./routes/Signup')
 const signin = require('./routes/Signin')
 const utils = require('./routes/utils')
 const logout = require('./routes/logout')
-const OAuth = require('./routes/OAuth')
+const Google = require('./routes/OAuth/Google')
+const GitHub = require('./routes/OAuth/Github')
+const Discordd = require('./routes/OAuth/Discord')
 
 
 app.use(cors({
@@ -60,7 +62,9 @@ app.use([
     signup(exp), 
     signin(exp),
     logout(exp),
-    OAuth(exp)
+    Google(exp),
+    GitHub(exp),
+    Discordd(exp)
 ])
 app.use(utils(exp))
 
