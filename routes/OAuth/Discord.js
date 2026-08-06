@@ -95,10 +95,6 @@ module.exports = exp => {
                 const userData = await redisClient.hGetAll(discordKey)
                 userId = userData.userId
 
-            } else if (localExist) {
-
-                console.log(`Alert! Email: ${localKey} already exists on Local Auth.`)
-
             } else {
 
                 userId = uuid4()
@@ -111,6 +107,12 @@ module.exports = exp => {
                 })
 
             }
+            
+            if (localExist) {
+
+                console.log(`[ALERT]: Email: ${localKey} has been registered locally.`)
+
+            } 
 
             const token = {
                 accessToken: access_token.slice(0, 40).concat('...'),

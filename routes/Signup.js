@@ -23,7 +23,7 @@ module.exports = exp => {
         
         logBody(req)
         // console.log(req.session && 'Session exists.')
-        console.log('Original Url: ', req.query.redirect)
+        // console.log('Original Url: ', req.query.redirect)
         const { email, password, username } = req.body
 
         if(!email || !password || !username ) {

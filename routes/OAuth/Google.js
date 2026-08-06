@@ -71,9 +71,6 @@ module.exports = exp => {
             if(googleExists) {
                 const userData = await redisClient.hGetAll(googleKey)
                 userId = userData.userId
-            } else if(localExist) {
-                // alert the user if local exists
-                console.log(`Alert! Email: ${localKey} already exists on Local Auth.`)
             } else {
                 userId = uuid4()
                 await redisClient.hSet(googleKey, {
@@ -82,6 +79,11 @@ module.exports = exp => {
                     email,
                     picture
                 })
+            }
+
+            if(localExist) {
+                // alert the user if local exists
+                console.log(`[ALERT]: Email: ${localKey} has been registered locally.`)
             }
 
             const token = {
@@ -93,6 +95,7 @@ module.exports = exp => {
                 token
             }
             
+            // session shinanigans
             req.session.oauthDat = oauthDat
             await setSession(req, userId, name, email, picture, 'google')
             logSes(req)

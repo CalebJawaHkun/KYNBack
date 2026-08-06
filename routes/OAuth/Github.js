@@ -109,10 +109,6 @@ module.exports = exp => {
                 const userData = await redisClient.hGetAll(githubKey)
                 userId = userData.userId
 
-            } else if (localExist) {
-
-                console.log(`Alert! Email: ${localKey} already exists on Local Auth.`)
-
             } else {
 
                 userId = uuid4()
@@ -123,6 +119,12 @@ module.exports = exp => {
                     email,
                     picture
                 })
+
+            }
+
+            if (localExist) {
+
+                console.log(`[ALERT]: Email: ${localKey} has been registered locally.`)
 
             }
 

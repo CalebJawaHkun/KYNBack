@@ -38,6 +38,7 @@ connectRedis()
 
 app.use(
     session({
+        name: 'crunchy-cookie',
         store: redisStore,
         secret: process.env.SESSION_SECRET || 'supersecret',
         resave: false,
@@ -64,9 +65,9 @@ app.use([
     logout(exp),
     Google(exp),
     GitHub(exp),
-    Discordd(exp)
+    Discordd(exp),
+    utils(exp)
 ])
-app.use(utils(exp))
 
 
 module.exports = app;
