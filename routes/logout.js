@@ -18,7 +18,7 @@ module.exports = exp => {
                     return res.status(500).json(response(false, 'Logout failed!'))
                 }
 
-                res.clearCookie('connect.sid')
+                res.clearCookie(process.env.COOKIE_NAME)
                 return res.json(response(true, 'Logged out successfully as local mode.'))
 
             })

@@ -63,6 +63,12 @@ Change Log KYNBack
 1. Discord OAuth
 2. Github OAuth
 
-### Changed
+### Fixed
 
 - Undefined UserId fixed: Client geting 204 status from /status endpoint after OAuth Signin  is now fixed.
+
+## Version 2.0.1 - 2026/8/6
+
+### Fixed
+
+- Logout Cookie Issue Fixed: client's cookie is not destroyed on logout is now fixed.

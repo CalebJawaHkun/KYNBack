@@ -38,7 +38,7 @@ connectRedis()
 
 app.use(
     session({
-        name: 'crunchy-cookie',
+        name: process.env.COOKIE_NAME,
         store: redisStore,
         secret: process.env.SESSION_SECRET || 'supersecret',
         resave: false,
