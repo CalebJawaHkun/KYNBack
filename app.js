@@ -28,28 +28,44 @@ const GitHub = require('./routes/OAuth/Github')
 const Discordd = require('./routes/OAuth/Discord')
 
 
+const isProd = process.env.NODE_ENV === 'production';
+const allowedOrigins = [
+    process.env.CLIENT_URL,
+    'http://localhost:5173',
+    'http://localhost:3000'
+].filter(Boolean);
+
+console.log('Is truely in Production: ', isProd)
+
+app.set('trust proxy', 1);
+
 app.use(cors({
-    origin: process.env.CLIENT_URL || 'http://localhost:5173' || 'http://localhost:3000',
-    credentials: true,
-}))
+  origin: (origin, callback) => {
+    if (!origin || allowedOrigins.includes(origin)) {
+      return callback(null, true);
+    }
+    return callback(new Error('Not allowed by CORS'));
+  },
+  credentials: true,
+}));
 
 const redisStore = new RedisStore({client: redisClient})
 connectRedis()
 
-app.use(
-    session({
-        name: process.env.COOKIE_NAME,
-        store: redisStore,
-        secret: process.env.SESSION_SECRET || 'supersecret',
-        resave: false,
-        saveUninitialized: false,
-        cookie: {
-            httpOnly: true,
-            secure: false,
-            maxAge: 1000 * 60 * 60 * 24,
-        }
-    })
-)
+app.use(session({
+    name: process.env.COOKIE_NAME || 'connect.sid',
+    store: redisStore,
+    secret: process.env.SESSION_SECRET || 'supersecret',
+    resave: false,
+    saveUninitialized: false,
+    proxy: true,
+    cookie: {
+        httpOnly: true,
+        secure: isProd,
+        sameSite: isProd ? 'none' : 'lax',
+        maxAge: 1000 * 60 * 60 * 24,
+    },
+}));
 app.use(logger('dev'));
 app.use(exp.json());
 app.use(exp.urlencoded({ extended: false }));
